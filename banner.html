@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        img{
+            display: block;
+            border: none;
+        }
+        a,a:hover,a:after,a:visited,a:active{
+            display: block;
+            text-decoration: none;
+        }
+        #banner{
+            width: 1000px;
+            height: 300px;
+            position: relative;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        #inner{
+            width: 4000px;
+            height: 300px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        #inner img{
+            width: 1000px;
+            height: 300px;
+            float: left;
+        }
+        #tips{
+            width: 160px;
+            height: 30px;
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+        }
+        #tips li{
+            float: left;
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+            line-height: 20px;
+            text-align: center;
+            background-color: coral;
+        }
+        #tips li.select{
+            background-color: fuchsia;
+            color: #fff;
+
+        }
+        a{
+            display: none;
+            background: url("img/pre.png") no-repeat center;
+            position: absolute;
+            top:50%;
+            margin-top: -23px;
+            width: 30px;
+            height: 45px;
+            opacity: 0.5;
+            filter: alpha(opacity=50);
+        }
+        #leftBtn{
+            background-position: 5px 0;
+            left: 20px;
+        }
+        #rightBtn{
+            background-position: -45px 0;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="banner">
+    <div id="inner">
+        <img src="img/banner1.jpg" alt=""/>
+        <img src="img/banner2.jpg" alt=""/>
+        <img src="img/banner3.jpg" alt=""/>
+        <img src="img/banner4.jpg" alt=""/>
+        <img src="img/banner1.jpg" alt=""/>
+    </div>
+    <ul id="tips">
+        <li class="select">1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+    </ul>
+    <a id="leftBtn" href="javascript:;"></a>
+    <a id="rightBtn" href="javascript:;"></a>
+
+</div>
+<script src="tween.js"></script>
+<script type="text/javascript">
+    var banner=document.getElementById("banner");
+    var oInner=document.getElementById("inner");
+    var leftBtn=document.getElementById("leftBtn");
+    var rightBtn=document.getElementById("rightBtn");
+    var imgList=document.getElementsByTagName("img");
+    var oLis=document.getElementsByTagName("li");
+    var oImg=oInner.getElementsByTagName("img")[0];
+    oInner.style.width=oInner.offsetWidth+oImg.offsetWidth+"px";
+
+
+
+    for(var i= 0;i<oLis.length;i++){
+        var oLi=oLis[i];
+        oLi.i=i;
+        oLi.onclick=function(){
+            animate(oInner,{left:this.i*-1000},700);
+            tipsSelect(this.i);
+            step=this.i
+        }
+    }
+
+    function tipsSelect(n){
+        if(n==4)n=0;
+        for(var i=0;i<oLis.length;i++){
+            oLis[i].className="";
+        }
+        oLis[n].className="select";
+    }
+
+//自动轮播
+    var step=0;
+    function autoMove(){
+        if(step==4){
+            oInner.style.left=0;
+            step=0;
+        }
+        step++;
+        animate(oInner,{left:step*-1000},700);
+        tipsSelect(step)
+    }
+
+    var timer= setInterval(autoMove,2000);
+
+     leftBtn.onclick=function(){
+        if(step==0){
+            oInner.style.left=(imgList.length-1)*-1000;
+            step=imgList.length-1;
+            animate.setCss(oInner,"left",step*-1000);
+        }
+         step--;
+         animate(oInner,{left:step*-1000},700);
+         tipsSelect(step)
+    };
+    rightBtn.onclick=function(){
+        autoMove()
+    };
+
+  banner.onmouseover=function(){
+      clearInterval(timer);
+      leftBtn.style.display=rightBtn.style.display="block";
+  };
+    banner.onmouseout=function(){
+        timer= setInterval(autoMove,2000);
+        leftBtn.style.display=rightBtn.style.display="none";
+    }
+
+</script>
+
+</body>
+</html>
